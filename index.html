@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вхід • Secure UI</title>
+
+<style>
+:root {
+  --primary: #4ade80;
+  --primary-dark: #16a34a;
+  --bg: #f0fdf4;
+  --card-bg: #ffffffee;
+  --text-main: #064e3b;
+  --text-muted: #065f46;
+  --input-bg: #f6fdf8;
+  --shadow-light: 0 10px 25px rgba(0,0,0,0.08);
+  --shadow-hover: 0 15px 35px rgba(0,0,0,0.12);
+  --error: #ef4444;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  min-height: 100vh;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  border-radius: 30px;
+  background: var(--card-bg);
+  box-shadow: var(--shadow-light);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.auth-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-3px);
+}
+
+h1 {
+  font-size: 2rem;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+p {
+  color: var(--text-muted);
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 16px 20px;
+  border-radius: 14px;
+  border: none;
+  background: var(--input-bg);
+  font-size: 1rem;
+  color: var(--text-main);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(74,222,128,0.25);
+  transform: translateY(-1px);
+}
+
+::placeholder {
+  color: #34d399;
+  opacity: 0.7;
+}
+
+.btn {
+  width: 100%;
+  padding: 16px;
+  font-weight: 600;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  border: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #22c55e, #4ade80);
+  color: #022c22;
+  margin-top: 5px;
+  box-shadow: 0 5px 15px rgba(34,197,94,0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(34,197,94,0.4);
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid #4ade80;
+  color: #065f46;
+  margin-top: 12px;
+}
+
+.btn-secondary:hover {
+  background: rgba(74,222,128,0.1);
+}
+
+.message {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 14px;
+  font-size: 0.95rem;
+  display: none;
+  text-align: center;
+}
+
+.success {
+  display: block;
+  background: rgba(74,222,128,0.2);
+  color: #065f46;
+}
+
+.error {
+  display: block;
+  background: rgba(239,68,68,0.15);
+  color: var(--error);
+  font-weight: 500;
+}
+</style>
+</head>
+
+<body>
+
+<div class="auth-card">
+  <h1>Вхід</h1>
+  <p>Увійдіть або створіть акаунт</p>
+
+  <div class="field">
+    <input id="username" placeholder="Імʼя користувача">
+  </div>
+
+  <div class="field">
+    <input id="password" type="password" placeholder="Пароль">
+  </div>
+
+  <button class="btn btn-primary" onclick="login()">Увійти</button>
+  <button class="btn btn-secondary" onclick="register()">Зареєструватися</button>
+
+  <div id="message" class="message"></div>
+</div>
+
+<script>
+function showMessage(text,type){
+  const m=document.getElementById("message");
+  m.textContent=text;
+  m.className="message "+type;
+}
+
+function register(){
+  const u=username.value.trim();
+  const p=password.value.trim();
+
+  if(!u||!p){
+    showMessage("Заповніть всі поля","error");
+    return;
+  }
+
+  if(localStorage.getItem("user_"+u)){
+    showMessage("Користувач вже існує","error");
+    return;
+  }
+
+  localStorage.setItem("user_"+u,p);
+  showMessage("Реєстрація успішна","success");
+}
+
+function login(){
+  const u=username.value.trim();
+  const p=password.value.trim();
+  const saved=localStorage.getItem("user_"+u);
+
+  if(saved && saved===p){
+    localStorage.setItem("loggedUser",u);
+    showMessage("Вхід успішний","success");
+
+    setTimeout(()=>window.location.href="menu2.html",700);
+  } else {
+    showMessage("Невірний логін або пароль","error");
+  }
+}
+</script>
+
+</body>
+</html>
